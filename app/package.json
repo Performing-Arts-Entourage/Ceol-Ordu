@@ -1,0 +1,23 @@
+{
+    "name": "ceol-ordu",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "astro": "astro",
+        "build": "astro build",
+        "dev": "astro dev",
+        "preview": "astro preview",
+        "start": "astro dev"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "stripe": "^10.6.0"
+    },
+    "devDependencies": {
+        "@astrojs/node": "^1.0.0",
+        "@astrojs/react": "^1.1.0",
+        "@astrojs/tailwind": "^1.0.0",
+        "astro": "^1.1.1"
+    }
+}
