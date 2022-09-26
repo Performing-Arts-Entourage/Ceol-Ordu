@@ -3,9 +3,6 @@
 # top-most EditorConfig file
 root = true
 
-[*.md]
-trim_trailing_whitespace = false
-
 [*]
 indent_style = space
 indent_size = 4
