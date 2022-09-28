@@ -1,4 +1,4 @@
-import { FirebaseOptions, initializeApp } from 'firebase/app';
+import { FirebaseOptions, getApps, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
@@ -13,8 +13,10 @@ const configuration: FirebaseOptions = {
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET
 };
 
-const app = initializeApp(configuration);
+if (!getApps().length) {
+    initializeApp(configuration);
+}
 
-export const auth = getAuth(app);
-export const firestore = getFirestore(app);
-export const storage = getStorage(app);
+export const auth = getAuth();
+export const firestore = getFirestore();
+export const storage = getStorage();
