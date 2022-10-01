@@ -1,12 +1,17 @@
 import { useSupabase } from '@/utilities/supabase';
 import { Session } from '@supabase/supabase-js';
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { SignInOptions } from './SignInOptions';
+import { signUserIn } from './signUserIn';
 
 interface AuthState {
     session?: Session | null;
+    signUserIn: (options: SignInOptions) => Promise<void>;
 }
 
-const defaultState: AuthState = {};
+const defaultState: AuthState = {
+    signUserIn: () => Promise.resolve()
+};
 
 const AuthContext = createContext<AuthState>(defaultState);
 
@@ -44,7 +49,8 @@ export const AuthProvider = ({ children }: Properties) => {
     }, []);
 
     const state = {
-        session
+        session,
+        signUserIn
     };
 
     return (
