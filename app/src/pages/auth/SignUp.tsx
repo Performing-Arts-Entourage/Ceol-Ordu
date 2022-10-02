@@ -1,12 +1,38 @@
-import { Button } from '@/components';
+import { SignUpMethod, useAuth, useIsAuthenticated } from '@/auth';
+import { Button, Form, Input, useCaptcha } from '@/components';
 import { faEnvelope, faPhone } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+interface FormData {
+    email?: string;
+    password: string;
+    phone?: string;
+}
+
 export const SignUp = () => {
-    const [signInReceiver, setSignInReceiver] = useState('email');
-    const [usePassword, setUsePassword] = useState(false);
+    const [signInReceiver, setSignInReceiver] = useState<'email' | 'phone'>('email');
+    const { token } = useCaptcha();
+
+    const isAuthenticated = useIsAuthenticated();
+    const { signUserUp } = useAuth();
+
+    async function onSubmit({ email, password, phone }: FormData) {
+        await signUserUp({
+            captchaToken: token,
+            email,
+            password,
+            phoneNumber: phone,
+            type: signInReceiver === 'phone' ? SignUpMethod.phonePassword : SignUpMethod.emailPassword
+        });
+    }
+
+    if (isAuthenticated) {
+        return (
+            <h1 className="m-auto text-4xl">Redirecting...</h1>
+        );
+    }
 
     return (
         <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100 flex-grow">
@@ -29,7 +55,7 @@ export const SignUp = () => {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form className="space-y-6" action="#" method="POST">
+                    <Form className="space-y-6" onSubmit={onSubmit}>
                         <p>Choose the device you want to login with.</p>
 
                         {signInReceiver === 'phone' && (
@@ -61,63 +87,26 @@ export const SignUp = () => {
                             </Button>
                         </div>
 
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                {signInReceiver === 'email' ? 'Email address' : undefined}
-                                {signInReceiver === 'phone' ? 'Phone number' : undefined}
-                            </label>
+                        <Input
+                            label={signInReceiver === 'email' ? 'Email address' : signInReceiver === 'phone' ? 'Phone number' : ''}
+                            name={signInReceiver}
+                            type={signInReceiver === 'phone' ? 'tel' : signInReceiver}
+                            autoComplete={signInReceiver === 'phone' ? 'tel-local' : signInReceiver}
+                            required
+                        />
 
-                            <div className="mt-1">
-                                <input
-                                    id={signInReceiver}
-                                    name={signInReceiver}
-                                    type={signInReceiver === 'phone' ? 'tel' : signInReceiver}
-                                    autoComplete={signInReceiver === 'phone' ? 'tel-local' : signInReceiver}
-                                    required
-                                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                                />
-                            </div>
-                        </div>
-
-                        <p>You can choose to sign in using a one-time password sent to your <strong>{signInReceiver}</strong> each time, or, set a permanent password.</p>
-
-                        <div className="flex items-center">
-                            <input
-                                id="remember-me"
-                                name="remember-me"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                onChange={() => setUsePassword(() => !usePassword)}
-                            />
-
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                Set permanent password
-                            </label>
-                        </div>
-
-                        {usePassword && (
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                    Password
-                                </label>
-
-                                <div className="mt-1">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete="current-password"
-                                        required
-                                        className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                                    />
-                                </div>
-                            </div>
-                        )}
+                        <Input
+                            label="Password"
+                            name="password"
+                            type="password"
+                            autoComplete="new-password"
+                            required
+                        />
 
                         <Button color="green" type="submit" fullWidth>
                             Sign up
                         </Button>
-                    </form>
+                    </Form>
 
                     {/* <div className="mt-6">
                         <div className="relative">

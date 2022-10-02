@@ -1,7 +1,7 @@
 import { useAuth } from './AuthProvider';
 
 export const useIsAuthenticated = () => {
-    const { session } = useAuth();
+    const { } = useAuth();
 
-    return !!session;
+    return false;
 };

@@ -1,13 +1,20 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
 import path from 'path';
+import { defineConfig } from 'vite';
+// import mkcert from 'vite-plugin-mkcert';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        // mkcert(),
+        react()
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src')
         }
+    },
+    server: {
+        // https: true
     }
 });
