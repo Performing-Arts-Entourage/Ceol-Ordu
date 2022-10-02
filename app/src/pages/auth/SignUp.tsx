@@ -3,7 +3,7 @@ import { Button, Form, Input, useCaptcha } from '@/components';
 import { faEnvelope, faPhone } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 
 interface FormData {
     email?: string;
@@ -13,14 +13,13 @@ interface FormData {
 
 export const SignUp = () => {
     const [signInReceiver, setSignInReceiver] = useState<'email' | 'phone'>('email');
-    const { token } = useCaptcha();
+    const { account } = useAuth();
 
     const isAuthenticated = useIsAuthenticated();
     const { signUserUp } = useAuth();
 
     async function onSubmit({ email, password, phone }: FormData) {
         await signUserUp({
-            captchaToken: token,
             email,
             password,
             phoneNumber: phone,
@@ -29,6 +28,14 @@ export const SignUp = () => {
     }
 
     if (isAuthenticated) {
+        return (
+            <h1 className="m-auto text-4xl">Redirecting...</h1>
+        );
+    }
+
+    if (account && !account.emailVerification) {
+        redirect('/account-created');
+
         return (
             <h1 className="m-auto text-4xl">Redirecting...</h1>
         );
@@ -56,13 +63,13 @@ export const SignUp = () => {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <Form className="space-y-6" onSubmit={onSubmit}>
-                        <p>Choose the device you want to login with.</p>
+                        {/* <p>Choose the device you want to login with.</p> */}
 
                         {signInReceiver === 'phone' && (
                             <p className="bg-yellow-50 text-yellow-700 p-4 rounded-md">Your phone must be able to receive text messages.</p>
                         )}
 
-                        <div className="flex">
+                        {/* <div className="flex">
                             <Button
                                 color={signInReceiver === 'email' ? 'blue' : 'gray'}
                                 outline={signInReceiver !== 'email'}
@@ -85,7 +92,7 @@ export const SignUp = () => {
                                 <FontAwesomeIcon icon={faPhone} size="lg" className="mr-2" />
                                 Phone
                             </Button>
-                        </div>
+                        </div> */}
 
                         <Input
                             label={signInReceiver === 'email' ? 'Email address' : signInReceiver === 'phone' ? 'Phone number' : ''}
