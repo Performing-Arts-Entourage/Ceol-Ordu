@@ -3,7 +3,7 @@ import { Button, Form, Input, useCaptcha } from '@/components';
 import { faEnvelope, faPhone } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { Link, redirect } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 
 interface FormData {
     email?: string;
@@ -14,6 +14,7 @@ interface FormData {
 export const SignUp = () => {
     const [signInReceiver, setSignInReceiver] = useState<'email' | 'phone'>('email');
     const { account } = useAuth();
+    const navigate = useNavigate();
 
     const isAuthenticated = useIsAuthenticated();
     const { signUserUp } = useAuth();
@@ -25,20 +26,8 @@ export const SignUp = () => {
             phoneNumber: phone,
             type: signInReceiver === 'phone' ? SignUpMethod.phonePassword : SignUpMethod.emailPassword
         });
-    }
 
-    if (isAuthenticated) {
-        return (
-            <h1 className="m-auto text-4xl">Redirecting...</h1>
-        );
-    }
-
-    if (account && !account.emailVerification) {
-        redirect('/account-created');
-
-        return (
-            <h1 className="m-auto text-4xl">Redirecting...</h1>
-        );
+        navigate('/account-created');
     }
 
     return (

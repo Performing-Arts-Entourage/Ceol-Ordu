@@ -58,7 +58,7 @@ export const MainNav = () => {
                             <div className="hidden sm:ml-6 sm:flex sm:items-center">
                                 <Unauthenticated>
                                     <Button color="blue" link="signup">Login</Button>
-                                    <Button color="blue" outline className="ml-4" link="signin">Sign Up</Button>
+                                    <Button color="blue" outline className="ml-4" link="signup">Sign Up</Button>
                                 </Unauthenticated>
                                 <Authenticated>
                                     <Notifications />

@@ -1,4 +1,5 @@
-import { account } from '@/utilities/appwrite';
+import { auth } from '@/utilities/firebase';
+import { sendSignInLinkToEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { SignInMethod } from './SignInMethod.enum';
 import { SignInOptions } from './SignInOptions';
 
@@ -8,11 +9,15 @@ export const signUserIn = async ({ email, password, phoneNumber, type }: SignInO
             if (!email) throw new Error('The email is required.');
             if (!password) throw new Error('The password is required.');
 
-            return await account.createEmailSession(email, password);
+            await signInWithEmailAndPassword(auth, email, password);
 
+            break;
         case SignInMethod.emailOneTimePassword:
             if (!email) throw new Error('The email is required.');
 
+            await sendSignInLinkToEmail(auth, email, {
+                url:
+            });
 
             break;
         case SignInMethod.phonePassword:
